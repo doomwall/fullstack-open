@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react'
 
 const Button = ({ handleClick, text }) => (
@@ -9,7 +7,7 @@ const Button = ({ handleClick, text }) => (
 )
 
 const StatisticLine = ({text, value}) => (
-  <p>{text} {value}</p>
+  <><tr><td>{text}</td><td>{value}</td></tr></>
 )
 
 const Display = (props) => {
@@ -22,12 +20,16 @@ const Display = (props) => {
   } else {
   return (
     <div>
-      <StatisticLine text="Good" value={props.good} />
-      <StatisticLine text="Neutral" value={props.neutral} />
-      <StatisticLine text="Bad" value={props.bad} />
-      <StatisticLine text="All" value={props.allReviews.length} />
-      <StatisticLine text="Average" value={props.average} />
-      <StatisticLine text="Positive" value={props.positives} />
+      <table>
+        <tbody>
+          <StatisticLine text="Good" value={props.good} />
+          <StatisticLine text="Neutral" value={props.neutral} />
+          <StatisticLine text="Bad" value={props.bad} />
+          <StatisticLine text="All" value={props.allReviews.length} />
+          <StatisticLine text="Average" value={props.average} />
+          <StatisticLine text="Positive" value={`${props.positives} %`} />
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -83,7 +85,6 @@ const App = () => {
     updatedAll.forEach (value => {
       summa += value
     })
-    console.log(summa)
     setAverage(summa / updatedAll.length)
   }
 
