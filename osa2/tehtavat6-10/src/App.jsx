@@ -9,11 +9,19 @@ const Name = (props) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons, setPersons] = useState([{name: "asdf", id: "1"}]) 
   const [newName, setNewName] = useState('')
 
   const addPerson = (event) => {
     event.preventDefault()
+
+    const match = persons.find(name => newName)
+    
+    if (match) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     const personObject = {
       name: newName,
       id: String(persons.length + 1),
