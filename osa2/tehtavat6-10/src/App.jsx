@@ -15,10 +15,13 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    const match = persons.find(name => newName)
+    const match = persons.find(function (person) {
+      return person.name === newName;
+    })
     
     if (match) {
       alert(`${newName} is already added to phonebook`)
+      setNewName("")
       return
     }
 
@@ -32,9 +35,9 @@ const App = () => {
     setNewName("")
   }
 
-const handleNoteChange = (event) => {
-  setNewName(event.target.value)
-}
+  const handleNoteChange = (event) => {
+    setNewName(event.target.value)
+  }
 
   return (
     <div>
