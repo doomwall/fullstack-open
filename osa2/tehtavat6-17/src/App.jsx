@@ -42,11 +42,52 @@ const PersonForm = (props) => {
   )
 }
 
+const Notification = ({ message, isError }) => {
+  const notificationStyle = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+  const notificationStyleError = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  if (isError) {
+    return (
+      <div style={notificationStyleError}>
+      {message}
+      </div>
+    )
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [errorMessage, setNotificationMessage] = useState(null)
+  const [messageStatus, setMessageStatus] = useState(false)
 
 
   useEffect(() => {
@@ -81,7 +122,22 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : changedPerson))
           })
+          .catch(error => {
+            setMessageStatus(true)
+            setNotificationMessage(`Information of ${changedPerson.name}has already been removed from server` )
+            setTimeout(() => {
+            setNotificationMessage(null)
+            }, 3000)
+            return
+          })
           emptyTemplate()
+
+        setMessageStatus(false)
+        setNotificationMessage(`${match.name}'s number changed succesfully`)
+        setTimeout(() => {
+        setNotificationMessage(null)
+        }, 3000)
+
           return
       } else {
         return
@@ -97,10 +153,16 @@ const App = () => {
     personService
       .create(personObject)
       .then(response => {
+
         setPersons(persons.concat(response))
         emptyTemplate()
-        console.log("persons ", persons)
       })
+
+    setMessageStatus(false)
+    setNotificationMessage(`Person ${newName} added succesfully`)
+    setTimeout(() => {
+          setNotificationMessage(null)
+        }, 3000)
 
   }
 
@@ -112,6 +174,12 @@ const App = () => {
         const copy = persons.filter(person => person.id !== id)
         setPersons(copy)
       })
+    
+    setMessageStatus(false)
+    setNotificationMessage(`Person removed succesfully`)
+    setTimeout(() => {
+          setNotificationMessage(null)
+        }, 3000)
   }
 
   const handleNoteChangeName = (event) => {
@@ -131,6 +199,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} isError={messageStatus} />
       <Filter search={search} function={handleNoteChangeSearch} />
       <h2>Add new person</h2>
       <PersonForm 
