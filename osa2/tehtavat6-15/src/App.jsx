@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
 const Name = (props) => {
   return (
     <li>
       {props.name} {props.number}
+      <button onClick={props.onClick}>Delete</button>
     </li>
   )
 }
@@ -40,12 +42,6 @@ const PersonForm = (props) => {
   )
 }
 
-const filtering = (list, query) => {
-  return list.filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
-}
-
-
-
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
@@ -55,18 +51,14 @@ const App = () => {
 
   useEffect(() => {
     console.log("effect")
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        console.log("promise done")
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
 
-
-  const toShow = filtering(persons, search)
-
-  const emptyTemplate = () => {
+  function emptyTemplate() {
     setNewName("")
     setNewNumber("")
     setSearch("")
@@ -75,14 +67,25 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    const match = persons.find(function (person) {
-      return person.name === newName;
-    })
+    const match = persons.find(person => person.name === newName)
+
+    console.log("match", match)
     
     if (match) {
-      alert(`${newName} is already added to phonebook`)
-      emptyTemplate()
-      return
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        console.log("lets go 2")
+        const id = match.id
+        const changedPerson = {... match, number: newNumber}
+        personService
+          .update(id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : changedPerson))
+          })
+          emptyTemplate()
+          return
+      } else {
+        return
+      }
     }
 
     const personObject = {
@@ -90,10 +93,25 @@ const App = () => {
       number: newNumber,
       id: String(persons.length + 1),
     }
-    console.log(personObject)
 
-    setPersons(persons.concat(personObject))
-    emptyTemplate()
+    personService
+      .create(personObject)
+      .then(response => {
+        setPersons(persons.concat(response))
+        emptyTemplate()
+        console.log("persons ", persons)
+      })
+
+  }
+
+  const removePerson = (id) => {
+    console.log("lets go")
+    personService
+      .remove(id)
+      .then(response => {
+        const copy = persons.filter(person => person.id !== id)
+        setPersons(copy)
+      })
   }
 
   const handleNoteChangeName = (event) => {
@@ -108,6 +126,7 @@ const App = () => {
     setSearch(event.target.value)
   }
 
+  const toShow = persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <div>
@@ -123,7 +142,7 @@ const App = () => {
         />
       <h2>Numbers</h2>
       <ul>
-        {toShow.map(person => <Name key={person.id} name={person.name} number={person.number} />) }
+        {toShow.map(person => <Name key={person.id} name={person.name} number={person.number} onClick={() => removePerson(person.id)} />) }
       </ul>
     </div>
   )

@@ -18,7 +18,7 @@
     {
       "id": "2341",
       "content": "sadness",
-      "important": true
+      "important": false
     },
     {
       "id": "8131",
@@ -39,6 +39,11 @@
       "id": "af22",
       "content": "assa",
       "important": true
+    },
+    {
+      "id": "39cf",
+      "content": "ererer",
+      "important": false
     }
   ]
 }
