@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 persons = [
     {
       "name": "Arto Hellas",
@@ -24,12 +26,58 @@ persons = [
     }
   ]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+app.get('/info', (request, response) => {
+  response.set('Content-Type', 'text/html')
+  const datenow = new Date().toString()
+  const message = "Phonebook has info for " + persons.length + " people <br><br>" + datenow 
+  response.send(
+    message
+  )
 })
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = persons.find(person => person.id === id)
+
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    persons = persons.filter(person => person.id !== id)
+
+    response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const person = request.body
+
+    if (!person.name || !person.number) {
+        return response.status(400).json({ 
+        error: 'name or number missing' 
+    })
+    }
+
+    const match = persons.find(n => n.name === person.name)
+    if (match) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+
+    person.id = Math.floor(Math.random() * 10000000).toString()
+
+    persons = persons.concat(person)
+
+    response.json(person)
 })
 
 const PORT = 3001
