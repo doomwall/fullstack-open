@@ -1,1 +1,1 @@
-https://fullstack-open-f041.onrender.com/info
+https://fullstack-open-f04i.onrender.com/info
