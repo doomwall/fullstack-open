@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "git add . && git commit -m deployment && git push"
+    "deploy": "git add --all && git commit -m deployment && git push"
   },
   "author": "Tuomo Valkila",
   "license": "ISC",
