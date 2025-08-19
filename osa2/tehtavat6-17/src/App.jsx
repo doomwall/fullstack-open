@@ -158,14 +158,13 @@ const App = () => {
       })
       .catch(error => {
         const data = error.response.data
-        const parser = new DOMParser()
-        const parsetData = parser.parseFromString(data, 'text/html')
-        const preElement = parsetData.querySelector('pre').textContent.trim().split('at Document')[0]
+        console.log(data)
+
+        const regex = /<pre>(.*?)<br>/s
+        const errorText = data.match(regex)
         
-        console.log(preElement)
-        const errorText = `${preElement}`
         setMessageStatus(true)
-        setNotificationMessage(`${errorText}`)
+        setNotificationMessage(`${errorText[1]}`)
         setTimeout(() => {
           setNotificationMessage(null)
         }, 3000)
