@@ -153,9 +153,24 @@ const App = () => {
     personService
       .create(personObject)
       .then(response => {
-
         setPersons(persons.concat(response))
         emptyTemplate()
+      })
+      .catch(error => {
+        const data = error.response.data
+        const parser = new DOMParser()
+        const parsetData = parser.parseFromString(data, 'text/html')
+        const preElement = parsetData.querySelector('pre').textContent.trim().split('at Document')[0]
+        
+        console.log(preElement)
+        const errorText = `${preElement}`
+        setMessageStatus(true)
+        setNotificationMessage(`${errorText}`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 3000)
+        
+        return
       })
 
     setMessageStatus(false)
