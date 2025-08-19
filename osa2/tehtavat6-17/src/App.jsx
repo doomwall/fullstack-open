@@ -162,12 +162,15 @@ const App = () => {
 
         const regex = /<pre>(.*?)<br>/s
         let errorText = data.match(regex)
+        
         if (!errorText) {
           errorText = "Error, try again!"
+        } else {
+          errorText = errorText[0]
         }
         
         setMessageStatus(true)
-        setNotificationMessage(`${errorText[0]}`)
+        setNotificationMessage(`${errorText}`)
         setTimeout(() => {
           setNotificationMessage(null)
         }, 3000)
