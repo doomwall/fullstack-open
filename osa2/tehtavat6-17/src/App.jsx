@@ -162,6 +162,8 @@ const App = () => {
 
         const regex = /<pre>(.*?)<br>/s
         const errorText = data.match(regex)
+
+        console.log(errorText)
         
         setMessageStatus(true)
         setNotificationMessage(`${errorText[1]}`)
