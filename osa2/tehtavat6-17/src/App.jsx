@@ -166,7 +166,7 @@ const App = () => {
         console.log(errorText)
         
         setMessageStatus(true)
-        setNotificationMessage(`${errorText[1]}`)
+        setNotificationMessage(`${errorText[0]}`)
         setTimeout(() => {
           setNotificationMessage(null)
         }, 3000)
