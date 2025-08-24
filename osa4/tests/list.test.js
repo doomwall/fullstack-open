@@ -93,6 +93,5 @@ describe('total likes', () => {
 
 test('Finding favourite blog', () => {
   const result = listHelper.favouriteBlog(multipleBlogs)
-  console.log(result)
   assert.deepStrictEqual(result, multipleBlogs[2])
 })
