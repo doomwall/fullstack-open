@@ -16,7 +16,10 @@ beforeEach(async () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
+    const user = new User({ 
+      username: 'root',
+      name: 'root_user', 
+      passwordHash })
     await user.save()
 
     let blogObject = new Blog(helper.initialBlogs[0])
@@ -143,3 +146,46 @@ after(async () => {
   await mongoose.connection.close()
 })
 
+
+test('a user can be created', async () => {
+  const newUser = {
+    user: "test_user",
+    username: "test_username",
+    password: "secret"
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(201)
+
+  const users = await helper.usersInDb()
+  const ourUser = users.find(user => user.username === "test_username").username
+
+  assert.strictEqual(ourUser, "test_username")
+
+}) 
+
+test('users cannot be created with usernames or passwords of length < 4', async () => {
+  const newUser = {
+    user: "test_user",
+    username: "te",
+    password: "secret"
+  }
+
+  const newUser2 = {
+    user: "test_user",
+    username: "test_username",
+    password: "se"
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(500)
+
+  await api
+    .post('/api/users')
+    .send(newUser2)
+    .expect(400)
+})
