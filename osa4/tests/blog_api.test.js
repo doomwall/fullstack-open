@@ -5,18 +5,26 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 
 beforeEach(async () => {
     await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+    await user.save()
 
     let blogObject = new Blog(helper.initialBlogs[0])
     await blogObject.save()
 
     blogObject = new Blog(helper.initialBlogs[1])
     await blogObject.save()
+    
 })
 
 test('blogs are returned as json and correct length', async () => {
