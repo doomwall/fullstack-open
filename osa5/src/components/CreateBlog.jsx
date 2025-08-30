@@ -1,8 +1,26 @@
-const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, addBlog }) => {
+import { useState, useImperativeHandle } from 'react'
+
+const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, addBlog, blogFormRef}) => {
+    const [createVisible, setCreateVisible] = useState(false)
+
+    const hideWhenVisible = { display: createVisible ? 'none' : '' }
+    const showWhenVisible = { display: createVisible ? '' : 'none' }
+
+    const toggleVisibility = () => {
+        setCreateVisible(!createVisible)
+    }
+
+    useImperativeHandle(blogFormRef, () => {
+        return { toggleVisibility }
+    })
 
     if (user) {
         return (
             <div>
+                <div style={hideWhenVisible}>
+                    <button onClick={toggleVisibility}>create a blog</button>
+                </div>
+                <div style={showWhenVisible}>
                 <form onSubmit={addBlog}>
                     <div>
                         <label>
@@ -38,6 +56,9 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
                     create
                 </button>
                 </form>
+                <button onClick={toggleVisibility}>cancel</button>
+                </div>
+                    
                 <br></br>
             </div>
         )

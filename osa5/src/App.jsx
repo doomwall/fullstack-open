@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import CreateBlog from './components/CreateBlog'
@@ -7,6 +7,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  const blogFormRef = useRef()
+
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
@@ -18,6 +20,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -65,6 +69,8 @@ const App = () => {
     window.localStorage.clear()
   }
 
+  
+
   const addBlog = event => {
     event.preventDefault()
     const blogObject = {
@@ -72,6 +78,8 @@ const App = () => {
       author: author,
       url: url
     }
+
+    blogFormRef.current.toggleVisibility()
 
     blogService.create(blogObject).then(returnedBlog => {
       console.log("RETURNED BLOG: ", returnedBlog)
@@ -85,6 +93,8 @@ const App = () => {
         setMessage(null)
       }, 5000)
   }
+
+  
 
   return (
     <div>
@@ -110,6 +120,7 @@ const App = () => {
       setAuthor={setAuthor} 
       setUrl={setUrl}
       addBlog={addBlog}
+      blogFormRef={blogFormRef}
       />
 
       {blogs.map(blog =>
