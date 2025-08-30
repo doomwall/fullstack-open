@@ -25,8 +25,8 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
+    )
   }, [])
 
   useEffect(() => {
@@ -69,8 +69,6 @@ const App = () => {
     window.localStorage.clear()
   }
 
-  
-
   const addBlog = event => {
     event.preventDefault()
     const blogObject = {
@@ -82,7 +80,6 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
 
     blogService.create(blogObject).then(returnedBlog => {
-      console.log("RETURNED BLOG: ", returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
       clearInput()
     })
@@ -92,6 +89,29 @@ const App = () => {
     setTimeout(() => {
         setMessage(null)
       }, 5000)
+  }
+
+  const handleLikes = (id) => {
+    const foundBlog = blogs.find(n => n.id === id)
+    const changedBlog = { ...foundBlog, likes: foundBlog.likes + 1}
+
+    blogService.update(id, changedBlog).then(returnedBlog => {
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+    })
+  }
+
+  const handleDelete = (id) => {
+    const foundBlog = blogs.find(n => n.id === id)
+    const confirmed = confirm(`Remove blog ${foundBlog.title} by ${foundBlog.author}?`)
+
+    if (confirmed) {
+      blogService.remove(id).then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== id))
+      })
+    } else {
+      return
+    }
+
   }
 
   
@@ -124,7 +144,13 @@ const App = () => {
       />
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog 
+        key={blog.id} 
+        blog={blog}
+        handleLikes={handleLikes}
+        handleDelete={handleDelete}
+        user={user}
+         />
       )}
     </div>
   )
