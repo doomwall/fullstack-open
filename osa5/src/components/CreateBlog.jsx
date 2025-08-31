@@ -24,7 +24,7 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
           <form onSubmit={addBlog}>
             <div>
               <label>
-                            title:
+                            title
                 <input
                   type="text"
                   value={title}
@@ -35,7 +35,7 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
             </div>
             <div>
               <label>
-                            author:
+                            author
                 <input
                   type="text"
                   value={author}
@@ -46,7 +46,7 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
             </div>
             <div>
               <label>
-                        url:
+                        url
                 <input
                   type="text"
                   value={url}

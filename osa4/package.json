@@ -6,7 +6,8 @@
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development node --watch index.js",
     "test": "NODE_ENV=test node --test",
-    "deploy": "git add --all && git commit -m 'deployment' && git push "
+    "deploy": "git add --all && git commit -m 'deployment' && git push ",
+    "start:test": "NODE_ENV=test node --watch index.js"
   },
   "author": "Tuomo Valkila",
   "license": "ISC",
