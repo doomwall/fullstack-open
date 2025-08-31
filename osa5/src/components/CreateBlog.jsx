@@ -29,6 +29,7 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
                   type="text"
                   value={title}
                   onChange={({ target }) => setTitle(target.value)}
+                  placeholder='title-input'
                 />
               </label>
             </div>
@@ -39,6 +40,7 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
                   type="text"
                   value={author}
                   onChange={({ target }) => setAuthor(target.value)}
+                  placeholder='author-input'
                 />
               </label>
             </div>
@@ -49,6 +51,7 @@ const CreateBlog = ({ user, title, author, url, setTitle, setAuthor, setUrl, add
                   type="text"
                   value={url}
                   onChange={({ target }) => setUrl(target.value)}
+                  placeholder='url-input'
                 />
               </label>
             </div>
