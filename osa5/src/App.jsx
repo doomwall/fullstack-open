@@ -10,7 +10,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
@@ -21,7 +21,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -45,27 +45,27 @@ const App = () => {
 
   const handleLogin = async event => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem(
-          'loggedBlogappUser', JSON.stringify(user)
-        ) 
-      
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
-      setPassword('') 
+      setPassword('')
     } catch {
       setMessage('wrong username or password')
       setError(true)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-  }
+    }
   }
 
-  const handleLogout = async event => {
+  const handleLogout = () => {
     window.localStorage.clear()
   }
 
@@ -87,13 +87,13 @@ const App = () => {
     setMessage(`a new blog ${title} by ${author} added`)
     setError(false)
     setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      setMessage(null)
+    }, 5000)
   }
 
   const handleLikes = (id) => {
     const foundBlog = blogs.find(n => n.id === id)
-    const changedBlog = { ...foundBlog, likes: foundBlog.likes + 1}
+    const changedBlog = { ...foundBlog, likes: foundBlog.likes + 1 }
 
     blogService.update(id, changedBlog).then(returnedBlog => {
       setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
@@ -114,43 +114,43 @@ const App = () => {
 
   }
 
-  
+
 
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} isError={isError}  />  
+      <Notification message={message} isError={isError}  />
 
-      <Login 
-      user={user}
-      username={username} 
-      password={password} 
-      setUsername={setUsername} 
-      setPassword={setPassword} 
-      handleLogin={handleLogin} 
-      handleLogout={handleLogout}
+      <Login
+        user={user}
+        username={username}
+        password={password}
+        setUsername={setUsername}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+        handleLogout={handleLogout}
       />
 
-      <CreateBlog 
-      user={user} 
-      title={title}
-      author={author}
-      url={url}
-      setTitle={setTitle} 
-      setAuthor={setAuthor} 
-      setUrl={setUrl}
-      addBlog={addBlog}
-      blogFormRef={blogFormRef}
+      <CreateBlog
+        user={user}
+        title={title}
+        author={author}
+        url={url}
+        setTitle={setTitle}
+        setAuthor={setAuthor}
+        setUrl={setUrl}
+        addBlog={addBlog}
+        blogFormRef={blogFormRef}
       />
 
       {blogs.map(blog =>
-        <Blog 
-        key={blog.id} 
-        blog={blog}
-        handleLikes={handleLikes}
-        handleDelete={handleDelete}
-        user={user}
-         />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleLikes={handleLikes}
+          handleDelete={handleDelete}
+          user={user}
+        />
       )}
     </div>
   )

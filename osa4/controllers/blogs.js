@@ -57,15 +57,12 @@ blogsRouter.post('/', async (request, response) => {
 blogsRouter.put('/:id', async (request, response) => {
   const foundBlog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
 
-  console.log(foundBlog.user)
-
   foundBlog.title = request.body.title
   foundBlog.author = request.body.author
   foundBlog.url = request.body.url
   foundBlog.likes = request.body.likes
 
   const updatedBlog = await foundBlog.save()
-  console.log(updatedBlog)
   response.status(201).json(updatedBlog)
 })
 
