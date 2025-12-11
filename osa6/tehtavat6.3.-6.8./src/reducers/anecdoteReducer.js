@@ -48,11 +48,12 @@ export const createAnecdote = (content) => {
   return {
     type: 'NEW_ANECDOTE',
     payload: {
-      content,
-      important: false,
-      id: generateId()
+      content: content,
+      id: getId(),
+      votes: 0
+    }
     }
   }
-}
+
 
 export default reducer
