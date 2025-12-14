@@ -5,9 +5,11 @@ const AnecdoteList = () => {
     const dispatch = useDispatch()
     const anecdotes = useSelector(state => state.anecdotes)
     const filter = useSelector(state => state.filter)
-    anecdotes.sort((a, b) => b.votes - a.votes)
+    const sortedAnecdotes = anecdotes.slice().sort(
+      (a, b) => b.votes - a.votes
+    )
 
-    const filteredAnecdotes = anecdotes.filter(x => x.content.includes(filter))
+    const filteredAnecdotes = sortedAnecdotes.filter(x => x.content.includes(filter))
 
     const vote = (id) => {
         dispatch(voteAnecdote(id))
